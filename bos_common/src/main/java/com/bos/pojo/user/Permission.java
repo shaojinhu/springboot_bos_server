@@ -37,6 +37,9 @@ public class Permission implements Serializable {
     @TableField(value = "pdesc")
     private String pdesc;
 
-    @TableField(exist = true)
+    @TableField(value = "is_show")
+    private String isShow;
+
+    @TableField(exist = false)
     private List<Permission> childPerList;
 }

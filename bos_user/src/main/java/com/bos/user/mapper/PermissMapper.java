@@ -22,4 +22,6 @@ public interface PermissMapper extends BaseMapper<Permission> {
             "u.`userid` = #{userid}" +
             "</script>")
     public List<Permission> getPermission(@Param("userid") String userid);
+
+
 }
