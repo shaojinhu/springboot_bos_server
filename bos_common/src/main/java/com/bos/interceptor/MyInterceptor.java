@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 
-@Configuration
+//@Configuration
 public class MyInterceptor extends WebMvcConfigurationSupport {
 
 

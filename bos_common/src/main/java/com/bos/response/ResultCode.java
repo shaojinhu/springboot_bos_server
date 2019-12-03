@@ -1,5 +1,6 @@
 package com.bos.response;
 
+
 public enum ResultCode {
 
 
@@ -9,6 +10,7 @@ public enum ResultCode {
   LOGIN_IS_EXCEPTION(false,80088,"登录异常，请从新登陆"),
   PERMISSION_IS_NULL(false,80088,"用户权限不足"),
   HASCHILD_IS_NOTDELETE(false,80089,"包含子级，不可以删除"),
+  PERMISSION_IS_HAVE_ROLE(false,90089,"该权限有角色正在使用"),
   TOKEN_IS_NULL(false,20022,"TOKEN为空");
 //  CLASS_REPETITION(false,70077,"班级重复"),
 //  EXAM_IS_COMMIT(false,30101,"试卷已提交"),
@@ -23,7 +25,8 @@ public enum ResultCode {
   boolean success;
 
 
-  ResultCode(boolean success,int code,String message){
+
+  ResultCode(boolean success, int code, String message){
     this.success = success;
     this.code = code;
     this.message = message;

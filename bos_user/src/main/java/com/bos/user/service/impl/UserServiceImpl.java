@@ -3,13 +3,16 @@ package com.bos.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bos.execption.MyException;
 import com.bos.pojo.user.Permission;
+import com.bos.pojo.user.Role;
 import com.bos.pojo.user.User;
 import com.bos.response.ProfileResult;
 import com.bos.response.Result;
 import com.bos.response.ResultCode;
 import com.bos.user.mapper.PermissMapper;
 import com.bos.user.mapper.UserMapper;
+import com.bos.user.repository.RoleRepository;
 import com.bos.user.service.UserService;
+import com.bos.util.IdWorker;
 import com.bos.util.JWTUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
@@ -17,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -27,9 +28,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
-
     @Resource
     private PermissMapper permissMapper;
+    @Resource
+    private IdWorker idWorker;
+    @Resource
+    private RoleRepository roleRepository;
 
 
     /**
@@ -92,6 +96,29 @@ public class UserServiceImpl implements UserService {
             ProfileResult profileResult = new ProfileResult(user,permission);
             return new Result(ResultCode.SUCCESS,profileResult);
         }
+    }
+
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    @Override
+    public Result addUser(User user) {
+        //生成全局id
+        String id = idWorker.nextId()+"";
+
+        //解析角色组
+        Set<Role> roles = new HashSet<>();
+        String[] split = user.getRoleIds().split(",");
+        for (String s : split) {
+            Role role = roleRepository.findById(Long.parseLong(s)).get();
+            roles.add(role);
+        }
+        if(roles.size() > 0){
+            //执行添加操作
+        }
+        return Result.FAIL();
     }
 
 

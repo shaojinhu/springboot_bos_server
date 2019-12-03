@@ -1,10 +1,14 @@
 package com.bos.user.service.impl;
 
 import com.bos.pojo.user.Permission;
+import com.bos.pojo.user.Role;
 import com.bos.response.Result;
 import com.bos.response.ResultCode;
 import com.bos.user.mapper.PermissMapper;
+import com.bos.user.repository.PermissionRepository;
+import com.bos.user.repository.RoleRepository;
 import com.bos.user.service.PermissionService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +25,15 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Resource
     private PermissMapper permissMapper;
+    @Resource
+    private PermissionRepository permissionRepository;
+    @Resource
+    private RoleRepository roleRepository;
 
+    /**
+     * 通过递归获取Permission集合
+     * @return
+     */
     @Override
     public Result getPermisionList(){
         List<Permission> permissionsList = permissMapper.selectList(null);
@@ -37,12 +49,61 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     /**
+     * 添加Permission权限
+     * @param permission
+     * @return
+     */
+    @Override
+    public Result addPermission(Permission permission) {
+        int insert = permissMapper.insert(permission);
+        if(insert > 0){
+            return Result.SUCCESS();
+        }
+        return Result.FAIL();
+    }
+
+
+    /**
+     * 修改Permission权限
+     */
+    @Override
+    public Result updatePermission(Permission permission) {
+        try {
+            permissionRepository.save(permission);
+            return Result.SUCCESS();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.FAIL();
+        }
+    }
+
+    /**
+     * 删除Permission
+     * @param permission
+     * @return
+     */
+    @Override
+    public Result deletePermission(Permission permission) {
+        //首先查看是否有子级，有则不让删除
+        List<Permission> permissions = permissionRepository.getPermissionByParentid(String.valueOf(permission.getPid()));
+        if(permissions.size() >0 &&  permissions!= null) return new Result(ResultCode.HASCHILD_IS_NOTDELETE);//包含子级不可删除
+        //查看是否有角色关联
+        Integer count = permissMapper.getRolesByPid(permission.getPid());
+        if(count > 0) return new Result(ResultCode.PERMISSION_IS_HAVE_ROLE);
+        //进行删除
+        int i = permissMapper.deleteById(permission.getPid());
+        if(i > 0) return new Result(ResultCode.SUCCESS);
+        else return new Result(ResultCode.FAIL);
+    }
+
+
+    /**
      * 递归方法
      * @param permissions
      */
     private void setChild(Permission p,List<Permission> permissions){
         //获取与父id相等的list
-        List<Permission> list = permissions.parallelStream().filter(item -> item.getParentid().equals(p.getPid().toString())).collect(Collectors.toList());
+        List<Permission> list = permissions.parallelStream().filter(item -> item.getParentid().equals(String.valueOf(p.getPid()))).collect(Collectors.toList());
         p.setChildPerList(list);
         if(list!=null){
             list.parallelStream().forEach(item ->{
@@ -50,5 +111,7 @@ public class PermissionServiceImpl implements PermissionService {
             });
         }
     }
+
+
 
 }

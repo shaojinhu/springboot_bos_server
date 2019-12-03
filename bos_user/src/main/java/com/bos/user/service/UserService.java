@@ -11,4 +11,6 @@ public interface UserService {
     Result login(User user) throws Exception;
 
     Result getPermission(HttpServletRequest request) throws MyException;
+
+    Result addUser(User user);
 }

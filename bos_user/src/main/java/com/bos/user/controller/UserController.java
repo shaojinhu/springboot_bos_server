@@ -34,5 +34,9 @@ public class UserController {
         return userService.getPermission(request);
     }
 
+    @PostMapping("addUser")
+    public Result adduser(@RequestBody User user){
+        return userService.addUser(user);
+    }
 
 }
