@@ -25,6 +25,11 @@ public class RoleController {
         return roleService.getRoleList(map);
     }
 
+    @GetMapping("getRole")
+    public Result getRole(){
+        return roleService.getRole();
+    }
+
     /**
      * 添加角色
      * @param role
@@ -45,6 +50,11 @@ public class RoleController {
         return roleService.updateRole(role);
     }
 
+    /**
+     * 删除Role
+     * @param role
+     * @return
+     */
     @DeleteMapping("deleteRole")
     public Result deleteRole(@RequestBody Role role){
         return roleService.deleteRole(role);

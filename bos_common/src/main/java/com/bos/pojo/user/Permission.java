@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,11 +24,12 @@ import java.util.Set;
 @TableName(value = "permission")
 @Entity
 @Table(name = "permission")
+@ToString
 public class Permission implements Serializable {
 
     @Id
     @TableId(value = "pid",type = IdType.ID_WORKER)
-    private long pid;
+    private String pid;
 
     @Column(name = "pname")
     @TableField(value = "pname")

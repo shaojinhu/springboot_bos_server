@@ -25,5 +25,5 @@ public interface PermissMapper extends BaseMapper<Permission> {
 
     @Select("SELECT COUNT(1) FROM `permission` AS p,`role_permission` AS rp " +
             "WHERE p.`pid` = rp.`permissionid` AND p.`pid` = #{ id }")
-    Integer getRolesByPid(@Param("id") long pid);
+    Integer getRolesByPid(@Param("id") String pid);
 }

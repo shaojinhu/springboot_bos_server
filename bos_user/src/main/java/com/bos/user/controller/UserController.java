@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @RestController
 @RequestMapping("user")
@@ -27,16 +28,54 @@ public class UserController {
     }
 
     /**
-     * 获取用户权限
+     * 获取用户User的权限Permission
+     * @param request
+     * @return
+     * @throws MyException
      */
     @RequestMapping(value = "/getPermission",method = RequestMethod.POST)
     private  Result getPermission(HttpServletRequest request) throws MyException {
         return userService.getPermission(request);
     }
 
+    /**
+     * 获得用户列表
+     * @param map
+     * @return
+     */
+    @PostMapping("getUserList")
+    public Result getUserList(@RequestBody Map<String,String> map){
+        return userService.getUserList(map);
+    }
+
+
+    /**
+     * 添加用户User
+     * @param user
+     * @return
+     */
     @PostMapping("addUser")
     public Result adduser(@RequestBody User user){
         return userService.addUser(user);
     }
 
+    /**
+     * 修改用户User
+     * @param user
+     * @return
+     */
+    @PutMapping("updateUser")
+    public Result updateUser(@RequestBody User user){
+        return userService.updateUser(user);
+    }
+
+    /**
+     * 删除用户User
+     * @param user
+     * @return
+     */
+    @DeleteMapping("deleteUser")
+    public Result deleteUser(@RequestBody User user){
+        return userService.deleteUser(user);
+    }
 }

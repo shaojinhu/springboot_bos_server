@@ -11,10 +11,8 @@ import com.bos.user.mapper.PermissMapper;
 import com.bos.user.mapper.UserMapper;
 import com.bos.user.repository.PermissionRepository;
 import com.bos.user.repository.RoleRepository;
-import com.bos.user.repository.UserRepository;
 import com.bos.user.service.RoleService;
 import com.bos.util.IdWorker;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -67,13 +65,13 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Result addRole(Role role) {
         //获取ID
-        long l = IdWorker.nextId();
+        String l = IdWorker.nextId()+"";
         role.setRid(l);
         //解析权限
         Set<Permission> pers = new HashSet<>();
         String[] split = role.getPermissionIds().split(",");
         for (String s : split) {
-            Permission permission = permissionRepository.findById(Long.parseLong(s)).get();
+            Permission permission = permissionRepository.findById(s).get();
             pers.add(permission);
         }
         if(pers.size() > 0 && ObjectUtils.anyNotNull(pers)){
@@ -98,7 +96,7 @@ public class RoleServiceImpl implements RoleService {
         Set<Permission> permissions = new HashSet<>();
         String[] split = role.getPermissionIds().split(",");
         for (String s : split) {
-            Permission permission = permissionRepository.findById(Long.parseLong(s)).get();
+            Permission permission = permissionRepository.findById(s).get();
             permissions.add(permission);
         }
         if(permissions.size() >0 && ObjectUtils.anyNotNull(permissions)){
@@ -125,6 +123,16 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.deleteById(role.getRid());
         return Result.SUCCESS();
 
+    }
+
+    /**
+     * 获得全部的角色
+     * @return
+     */
+    @Override
+    public Result getRole() {
+        List<Role> all = roleRepository.findAll();
+        return new Result(ResultCode.SUCCESS,all);
     }
 
 

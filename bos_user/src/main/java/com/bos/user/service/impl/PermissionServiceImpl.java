@@ -8,6 +8,7 @@ import com.bos.user.mapper.PermissMapper;
 import com.bos.user.repository.PermissionRepository;
 import com.bos.user.repository.RoleRepository;
 import com.bos.user.service.PermissionService;
+import com.bos.util.IdWorker;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,8 @@ public class PermissionServiceImpl implements PermissionService {
     private PermissionRepository permissionRepository;
     @Resource
     private RoleRepository roleRepository;
+    @Resource
+    private IdWorker idWorker;
 
     /**
      * 通过递归获取Permission集合
@@ -55,6 +58,8 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public Result addPermission(Permission permission) {
+        //指定id
+        permission.setPid(idWorker.nextId()+"");
         int insert = permissMapper.insert(permission);
         if(insert > 0){
             return Result.SUCCESS();
@@ -68,8 +73,10 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public Result updatePermission(Permission permission) {
+        Permission target = permissionRepository.findById(permission.getPid()).get();
+        BeanUtils.copyProperties(permission,target);
         try {
-            permissionRepository.save(permission);
+            permissionRepository.save(target);
             return Result.SUCCESS();
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,7 +110,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     private void setChild(Permission p,List<Permission> permissions){
         //获取与父id相等的list
-        List<Permission> list = permissions.parallelStream().filter(item -> item.getParentid().equals(String.valueOf(p.getPid()))).collect(Collectors.toList());
+        List<Permission> list = permissions.parallelStream().filter(item -> item.getParentid().equals(p.getPid())).collect(Collectors.toList());
         p.setChildPerList(list);
         if(list!=null){
             list.parallelStream().forEach(item ->{

@@ -15,5 +15,5 @@ public interface UserMapper extends BaseMapper<User>{
     @Select("SELECT * FROM `user_role` AS ur,`user` AS u " +
             "WHERE ur.`userid` = u.`userid` " +
             "AND ur.`roleid` = #{rid}")
-    List<User> getUserByList(@Param("rid") long rid);
+    List<User> getUserByList(@Param("rid") String rid);
 }

@@ -14,4 +14,6 @@ public interface RoleService {
     Result updateRole(Role role);
 
     Result deleteRole(Role role);
+
+    Result getRole();
 }

@@ -7,10 +7,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,6 +43,10 @@ public class User implements Serializable {
     @TableField(value = "nikename")
     private String nikename;
 
+    @Column(name = "depaid")
+    @TableField(value = "depaid")
+    private String depaId;
+
     /**
      * 用于映射user_role表
      */
@@ -53,4 +60,6 @@ public class User implements Serializable {
     @TableField(exist = false)
     @Transient
     private String roleIds;
+
+
 }

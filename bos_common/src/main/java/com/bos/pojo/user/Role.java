@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,8 +26,8 @@ import java.util.Set;
 public class Role implements Serializable {
 
     @Id
-    @TableId(value = "rid",type = IdType.ID_WORKER)
-    private long rid;
+    @TableId(value = "rid",type = IdType.ID_WORKER_STR)
+    private String rid;
 
     @Column(name = "rname")
     @TableField(value = "rname")
@@ -44,10 +45,6 @@ public class Role implements Serializable {
     @JoinTable(name = "role_permission",joinColumns = @JoinColumn(name = "roleid",referencedColumnName = "rid"),
                 inverseJoinColumns = @JoinColumn(name = "permissionid",referencedColumnName = "pid"))
     private Set<Permission> permissions = new HashSet<>();
-
-    @TableField(exist = false)
-    @ManyToMany(mappedBy="roles")
-    private Set<User> users = new HashSet<>();
 
     //进用于添加角色时映射权限
     @TableField(exist = false)

@@ -5,6 +5,7 @@ import com.bos.pojo.user.User;
 import com.bos.response.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public interface UserService {
 
@@ -13,4 +14,10 @@ public interface UserService {
     Result getPermission(HttpServletRequest request) throws MyException;
 
     Result addUser(User user);
+
+    Result updateUser(User user);
+
+    Result deleteUser(User user);
+
+    Result getUserList(Map<String, String> map);
 }

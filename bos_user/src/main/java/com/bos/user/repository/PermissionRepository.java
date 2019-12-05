@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
-public interface PermissionRepository extends JpaRepository<Permission,Long>,JpaSpecificationExecutor<Permission> {
+public interface PermissionRepository extends JpaRepository<Permission,String>,JpaSpecificationExecutor<Permission> {
 
 
     List<Permission> getPermissionByParentid(String parentid);
