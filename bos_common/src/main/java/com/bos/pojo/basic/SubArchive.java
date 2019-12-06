@@ -44,7 +44,7 @@ public class SubArchive implements Serializable {
     private String operatingCompany;
 
     @TableField(value = "operating_time")
-    private String operating_time;
+    private String operatingTime;
 
     @TableField(value = "operator")
     private String operator;

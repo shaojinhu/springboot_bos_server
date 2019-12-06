@@ -67,7 +67,6 @@ public class ArchiveServiceImpl implements ArchiveService {
         parentArchive.setOperator(map.get("nikename"));
         parentArchive.setOperatingCompany(map.get("company"));
         parentArchive.setOperatingTime(map.get("operatingTime"));
-        System.err.println(parentArchive);
         int insert = parentArchiveMapper.insert(parentArchive);
         if(insert > 0){
             return Result.SUCCESS();
@@ -106,11 +105,9 @@ public class ArchiveServiceImpl implements ArchiveService {
             //有子级表示不可以删除
             throw new MyException(ResultCode.HASCHILD_IS_NOTDELETE);
         }
-        parentArchive.setOperator(map.get("nikename"));
-        parentArchive.setOperatingCompany(map.get("company"));
-        parentArchive.setOperatingTime(map.get("operatingTime"));
-//        parentArchiveMapper.deleteById(parentArchive.getId());
-        return null;
+        //物理删除
+        parentArchiveMapper.deleteById(parentArchive.getId());
+        return Result.SUCCESS();
     }
 
     /**
@@ -145,7 +142,7 @@ public class ArchiveServiceImpl implements ArchiveService {
     public Result updateSub(SubArchive subArchive,Map<String, String> map) {
         subArchive.setOperator(map.get("nikename"));
         subArchive.setOperatingCompany(map.get("company"));
-        subArchive.setOperating_time(map.get("operatingTime"));
+        subArchive.setOperatingTime(map.get("operatingTime"));
         int i = subArchiveMapper.updateById(subArchive);
         if(i > 0){
             return Result.SUCCESS();
@@ -162,7 +159,7 @@ public class ArchiveServiceImpl implements ArchiveService {
     @Override
     public Result addArchive(SubArchive subArchive, Map<String, String> map) {
         subArchive.setOperator(map.get("nikename"));
-        subArchive.setOperating_time(map.get("operatingTime"));
+        subArchive.setOperatingTime(map.get("operatingTime"));
         subArchive.setOperatingCompany(map.get("company"));
         int insert = subArchiveMapper.insert(subArchive);
         if(insert > 0){
@@ -178,8 +175,11 @@ public class ArchiveServiceImpl implements ArchiveService {
      */
     @Override
     public Result deleteSub(SubArchive subArchive) {
-
-        return null;
+        int i = subArchiveMapper.deleteById(subArchive.getSubId());
+        if(i >0){
+            return Result.SUCCESS();
+        }
+        return Result.FAIL();
     }
 
 
