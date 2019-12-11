@@ -12,6 +12,10 @@ public enum ResultCode {
   HASCHILD_IS_NOTDELETE(false,80089,"包含子级，不可以删除"),
   PERMISSION_IS_HAVE_ROLE(false,90089,"该权限有角色正在使用"),
   DEPA_HAVE_USER(false,90089,"该部门下存在员工，不可删除"),
+  STANDARD_USERING(false,90087,"该标准正在使用，不允许删除"),
+  TAKETIME_USERING(false,90086,"该时间正在使用，不允许此操作"),
+  VEHICLE_USERING(false,90085,"该车辆正在使用，不允许删除"),
+  CITY_IS_EXIT(false,90185,"区域已经存在，不允许重复添加"),
   DEPA_IS_NOTHAVE_USER(false,92089,"该部门下没有员工"),
   DISABLED_IS_NOT_UPDATE(false,91089,"禁用状态不可修改"),
   TOKEN_IS_NULL(false,20022,"TOKEN为空");

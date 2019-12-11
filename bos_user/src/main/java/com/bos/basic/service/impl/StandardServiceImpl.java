@@ -3,8 +3,10 @@ package com.bos.basic.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bos.basic.mapper.CourierMapper;
 import com.bos.basic.mapper.StandardMapper;
 import com.bos.basic.service.StandardService;
+import com.bos.pojo.basic.Courier;
 import com.bos.pojo.basic.Standard;
 import com.bos.response.PageResult;
 import com.bos.response.Result;
@@ -25,6 +27,8 @@ public class StandardServiceImpl implements StandardService {
 
     @Resource
     private StandardMapper standardMapper;
+    @Resource
+    private CourierMapper courierMapper;
 
     /**
      * 获取取派标准Standard的列表
@@ -93,14 +97,21 @@ public class StandardServiceImpl implements StandardService {
      */
     @Override
     public Result deleteStandard(Standard standard) {
-        //TODO
-        // 如果有快递员正在使用该标准，则不允许添加
-        return null;
-//        int i = standardMapper.deleteById(standard.getId());
-//        if(i > 0){
-//            return  Result.SUCCESS();
-//        }
-//        return Result.FAIL();
+        //如有快递员正在使用，则不允许删除
+        QueryWrapper<Courier> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("standard_id",standard.getId());
+        Integer integer = courierMapper.selectCount(queryWrapper);
+        if(integer > 0){
+            return new Result(ResultCode.STANDARD_USERING);
+        }else{
+            //删除
+            int i = standardMapper.deleteById(standard.getId());
+            if(i > 0){
+                return  Result.SUCCESS();
+            }else{
+                return Result.FAIL();
+            }
+        }
     }
 
     /**

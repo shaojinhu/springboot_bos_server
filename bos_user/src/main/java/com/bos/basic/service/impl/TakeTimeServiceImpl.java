@@ -3,8 +3,10 @@ package com.bos.basic.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.bos.basic.mapper.CourierMapper;
 import com.bos.basic.mapper.TakeTimeMapper;
 import com.bos.basic.service.TakeTimeService;
+import com.bos.pojo.basic.Courier;
 import com.bos.pojo.basic.TakeTime;
 import com.bos.response.PageResult;
 import com.bos.response.Result;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.annotation.Resources;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +26,8 @@ public class TakeTimeServiceImpl implements TakeTimeService {
 
     @Resource
     private TakeTimeMapper takeTimeMapper;
-
+    @Resource
+    private CourierMapper courierMapper;
     /**
      * 获得TakeTime的列表，有分页
      * @param map
@@ -87,21 +91,41 @@ public class TakeTimeServiceImpl implements TakeTimeService {
      */
     @Override
     public Result revTakeTime(TakeTime takeTime, Map<String, String> map) {
-        takeTime.setOperator(map.get("nikename"));
-        takeTime.setOperatingCompany(map.get("company"));
-        takeTime.setOperatingTime(map.get("operatingTime"));
-        if(takeTime.getStatus().equals("0")){
-            takeTime.setStatus("1");
-        }else{
-            takeTime.setStatus("0");
+        //如有快递员正在使用，则不允许禁用
+        QueryWrapper<Courier> queryWrapperCourier = new QueryWrapper<>();
+        queryWrapperCourier.eq("taketime_id",takeTime.getId());
+        Integer integer = courierMapper.selectCount(queryWrapperCourier);
+        if(integer > 0){
+            return new Result(ResultCode.TAKETIME_USERING);
+        }else {
+            takeTime.setOperator(map.get("nikename"));
+            takeTime.setOperatingCompany(map.get("company"));
+            takeTime.setOperatingTime(map.get("operatingTime"));
+            if (takeTime.getStatus().equals("0")) {
+                takeTime.setStatus("1");
+            } else {
+                takeTime.setStatus("0");
+            }
+            int i = takeTimeMapper.updateById(takeTime);
+            if (i > 0) {
+                return Result.SUCCESS();
+            }
+            return Result.FAIL();
         }
-        int i = takeTimeMapper.updateById(takeTime);
-        if(i > 0){
-            return Result.SUCCESS();
-        }
-        return Result.FAIL();
     }
 
+    /**
+     * 获得启用的收派时间列表
+     * @param status
+     * @return
+     */
+    @Override
+    public Result getStatusIsOk() {
+        QueryWrapper<TakeTime> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status","0");
+        List<TakeTime> takeTimes = takeTimeMapper.selectList(queryWrapper);
+        return new Result(ResultCode.SUCCESS,takeTimes);
+    }
 
 
 }

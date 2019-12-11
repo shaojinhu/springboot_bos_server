@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * 车辆管理Vehicle实体类
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,26 +23,35 @@ public class Vehicle implements Serializable {
     private String id;
 
     @TableField(value = "route_type")
-    private String routeType;
+    private String routeType;  //线路类型
 
     @TableField(value = "route_name")
-    private String routeName;
+    private String routeName; //线路名称
 
     @TableField(value = "shipper")
-    private String shipper;
+    private String shipper;  //承运商
 
     @TableField(value = "driver")
-    private String driver;
+    private String driver;  //司机
 
     @TableField(value = "vehicle_num")
-    private String vehicleNum;
+    private String vehicleNum;  //车牌号
 
     @TableField(value = "vehicle_type")
-    private String vehicleType;
+    private String vehicleType;  //车型
 
     @TableField(value = "ton")
-    private String ton;
+    private String ton;  //吨控
 
     @TableField(value = "remark")
-    private String remark;
+    private String remark;   //备注
+
+    @TableField(value = "operating_company")
+    private String operatingCompany;
+
+    @TableField(value = "operating_time")
+    private String operatingTime;
+
+    @TableField(value = "operator")
+    private String operator;
 }

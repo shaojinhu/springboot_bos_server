@@ -16,4 +16,6 @@ public interface TakeTimeService {
 
 
     Result revTakeTime(TakeTime takeTime, Map<String, String> map);
+
+    Result getStatusIsOk();
 }

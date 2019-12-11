@@ -54,4 +54,13 @@ public class TakeTimeController extends BaseController {
     public  Result revTakeTime(@RequestBody TakeTime takeTime){
         return takeTimeService.revTakeTime(takeTime,super.map);
     }
+
+    /**
+     * 获得全部启用的收派时间
+     * @return
+     */
+    @GetMapping("getStatusIsOk")
+    public Result getStatusIsOk(){
+        return takeTimeService.getStatusIsOk();
+    }
 }
